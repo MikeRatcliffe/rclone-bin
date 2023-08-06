@@ -1,0 +1,40 @@
+name: Create Release
+
+on:
+  push:
+    tags: "v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install zip
+        uses: montudor/action-zip@v1
+
+      - name: Zip files
+        run: |
+          zip -j -r rclone-bin-linux-ia32.zip linux/ia32
+          zip -j -r rclone-bin-linux-x64.zip linux/x64
+          zip -j -r rclone-bin-mac-ia32.zip mac/ia32
+          zip -j -r rclone-bin-mac-x64.zip mac/x64
+          zip -j -r rclone-bin-win-ia32.zip win/ia32
+          zip -j -r rclone-bin-win-x64.zip win/x64
+
+      - name: Create release and upload assets
+        id: upload-release-asset
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            rclone-bin-linux-ia32.zip
+            rclone-bin-linux-x64.zip
+            rclone-bin-mac-ia32.zip
+            rclone-bin-mac-x64.zip
+            rclone-bin-win-ia32.zip
+            rclone-bin-win-x64.zip
