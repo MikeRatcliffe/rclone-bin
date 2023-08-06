@@ -1,0 +1,35 @@
+#!/bin/sh
+if [ "$#" -eq 0 ]
+then
+  echo "Usage: update 1.63.1 # Downloads rclone v1.63.1"
+  exit 0
+fi
+
+version=$1
+
+mkdir tmp
+cd tmp
+
+wget https://downloads.rclone.org/v${version}/rclone-v${version}-linux-386.zip
+7zz x rclone-v${version}-linux-386.zip
+mv rclone-v${version}-linux-386/rclone ../linux/ia32/rclone
+
+wget https://downloads.rclone.org/v${version}/rclone-v${version}-linux-amd64.zip
+7zz x rclone-v${version}-linux-amd64.zip
+mv rclone-v${version}-linux-amd64/rclone ../linux/x64/rclone
+
+wget https://downloads.rclone.org/v${version}/rclone-v${version}-osx-amd64.zip
+7zz x rclone-v${version}-osx-amd64.zip
+mv rclone-v${version}-osx-amd64/rclone ../mac/x64/rclone
+cp ../mac/x64/rclone ../mac/ia32/rclone
+
+wget https://downloads.rclone.org/v${version}/rclone-v${version}-windows-386.zip
+7zz x rclone-v${version}-windows-386.zip
+mv rclone-v${version}-windows-386/rclone.exe ../win/ia32/rclone.exe
+
+wget https://downloads.rclone.org/v${version}/rclone-v${version}-windows-amd64.zip
+7zz x rclone-v${version}-windows-amd64.zip
+mv rclone-v${version}-windows-amd64/rclone.exe ../win/x64/rclone.exe
+
+cd ..
+rm -rf tmp
